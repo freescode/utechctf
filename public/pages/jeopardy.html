@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTech CTF Hub - Jeopardy</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav {
+            background: #111;
+            border-bottom: 1px solid #00ff41;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 { font-size: 20px; }
+
+        .nav-links a {
+            color: #00ff41;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover { color: #fff; }
+        .nav-user { font-size: 13px; color: #888; }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h2 { font-size: 28px; margin-bottom: 5px; }
+        .page-title p { color: #888; font-size: 13px; }
+
+        .score-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 25px;
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .score-bar span { font-size: 14px; color: #888; }
+        .score-bar strong { color: #00ff41; font-size: 20px; }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        .category-header {
+            background: #1a1a3a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 15px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            color: #00aaff;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tile {
+            background: #1a1a3a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 20px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tile:hover { border-color: #00aaff; background: #1a1a4a; }
+
+        .tile .points {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffdd00;
+        }
+
+        .tile.solved {
+            background: #0a1a0a;
+            border-color: #1a3a1a;
+            cursor: default;
+        }
+
+        .tile.solved .points { color: #333; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: #111;
+            border: 2px solid #00aaff;
+            border-radius: 8px;
+            padding: 35px;
+            width: 600px;
+            max-width: 90%;
+        }
+
+        .modal-points {
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffdd00;
+            margin-bottom: 20px;
+        }
+
+        .modal-category {
+            text-align: center;
+            color: #00aaff;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .modal-question {
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #1a1a2a;
+            border-radius: 6px;
+        }
+
+        .answer-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .answer-input input {
+            flex: 1;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .answer-input input:focus { outline: none; border-color: #00aaff; }
+
+        .btn {
+            padding: 12px 25px;
+            background: #00aaff;
+            color: #0a0a0a;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn:hover { background: #0088cc; }
+
+        .btn-close {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid #555;
+            color: #888;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .btn-close:hover { border-color: #888; color: #fff; }
+
+        .result {
+            text-align: center;
+            font-size: 14px;
+            min-height: 20px;
+            margin-bottom: 10px;
+        }
+
+        .success { color: #00ff41; }
+        .error { color: #ff4444; }
+
+        .reveal-box {
+            display: none;
+            background: #0a1a0a;
+            border: 1px solid #00ff41;
+            border-radius: 4px;
+            padding: 12px;
+            text-align: center;
+            color: #00ff41;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>⚡ UTech CTF Hub</h1>
+    <div class="nav-links">
+        <a href="/pages/learn.html">Learn</a>
+        <a href="/pages/challenges.html">Challenges</a>
+        <a href="/pages/jeopardy.html">Jeopardy</a>
+        <a href="/pages/quizzes.html">Quizzes</a>
+        <a href="/pages/scoreboard.html">Scoreboard</a>
+        <a href="#" id="adminLink" style="display:none; color:#ff4444;">Admin</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+    <div class="nav-user" id="navUser"></div>
+</nav>
+
+    <div class="container">
+        <div class="page-title">
+            <h2>🎯 CTF Jeopardy</h2>
+            <p>Select a category and point value to answer a question</p>
+        </div>
+
+        <div class="score-bar">
+            <span>Session Score: <strong id="sessionScore">0</strong> pts</span>
+            <span>Answered: <strong id="answeredCount">0</strong> / 30</span>
+        </div>
+
+        <div class="board" id="board"></div>
+    </div>
+
+    <!-- Question Modal -->
+    <div class="modal" id="questionModal">
+        <div class="modal-content">
+            <div class="modal-points" id="modalPoints"></div>
+            <div class="modal-category" id="modalCategory"></div>
+            <div class="modal-question" id="modalQuestion"></div>
+            <div class="answer-input">
+                <input type="text" id="answerInput" placeholder="Type your answer..." />
+                <button class="btn" onclick="submitAnswer()">SUBMIT</button>
+            </div>
+            <div class="result" id="answerResult"></div>
+            <div class="reveal-box" id="revealBox"></div>
+            <button class="btn-close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.role === 'admin') {
+    document.getElementById('adminLink').style.display = 'inline';
+    document.getElementById('adminLink').href = '/pages/admin.html';
+}
+        if (!user) window.location.href = '/pages/login.html';
+
+        document.getElementById('navUser').textContent =
+            `👤 ${user.username} | ⚡ ${user.total_points || 0} pts`;
+
+        let sessionScore = 0;
+        let answeredCount = 0;
+        let currentTile = null;
+        let solved = {};
+
+        const categories = ['Web', 'Crypto', 'Network', 'Linux', 'OWASP', 'Incident'];
+        const points = [100, 200, 300, 400, 500];
+
+        const questions = {
+            'Web': {
+                100: { q: 'What does SQL stand for?', a: 'structured query language', reveal: 'Structured Query Language' },
+                200: { q: 'What type of attack inserts malicious scripts into web pages viewed by other users?', a: 'xss', reveal: 'XSS - Cross Site Scripting' },
+                300: { q: 'What OWASP vulnerability allows accessing other users data by changing an ID in the URL?', a: 'idor', reveal: 'IDOR - Insecure Direct Object Reference' },
+                400: { q: 'What SQL payload is used to comment out the rest of a query in MySQL?', a: '--', reveal: '-- (double dash)' },
+                500: { q: 'What type of SQL injection uses true/false responses to slowly extract data without seeing output directly?', a: 'blind', reveal: 'Blind SQL Injection' }
+            },
+            'Crypto': {
+                100: { q: 'What encoding scheme uses A-Z, a-z, 0-9, + and / characters?', a: 'base64', reveal: 'Base64' },
+                200: { q: 'ROT13 shifts each letter by how many places?', a: '13', reveal: '13 places' },
+                300: { q: 'What cipher uses a keyword to shift letters by different amounts?', a: 'vigenere', reveal: 'Vigenere Cipher' },
+                400: { q: 'In RSA encryption, what is n equal to?', a: 'p*q', reveal: 'n = p * q (product of two primes)' },
+                500: { q: 'What hashing algorithm produces a 256-bit hash and is considered secure for password storage?', a: 'sha256', reveal: 'SHA-256' }
+            },
+            'Network': {
+                100: { q: 'What port does HTTP use by default?', a: '80', reveal: 'Port 80' },
+                200: { q: 'What port does HTTPS use?', a: '443', reveal: 'Port 443' },
+                300: { q: 'What tool is used to capture and analyze network packet captures (PCAP files)?', a: 'wireshark', reveal: 'Wireshark' },
+                400: { q: 'What port does MySQL use by default?', a: '3306', reveal: 'Port 3306' },
+                500: { q: 'What Nmap flag is used to detect service versions on open ports?', a: '-sv', reveal: '-sV (service version detection)' }
+            },
+            'Linux': {
+                100: { q: 'What Linux command lists files in a directory?', a: 'ls', reveal: 'ls' },
+                200: { q: 'What command extracts readable strings from a binary file?', a: 'strings', reveal: 'strings' },
+                300: { q: 'What command shows currently running network connections?', a: 'netstat', reveal: 'netstat' },
+                400: { q: 'What command in Linux is used to search for text patterns inside files?', a: 'grep', reveal: 'grep' },
+                500: { q: 'What command shows the first 10 lines of a file by default?', a: 'head', reveal: 'head' }
+            },
+            'OWASP': {
+                100: { q: 'What does OWASP stand for?', a: 'open web application security project', reveal: 'Open Web Application Security Project' },
+                200: { q: 'What is the #1 vulnerability in the OWASP Top 10 2021?', a: 'broken access control', reveal: 'A01 - Broken Access Control' },
+                300: { q: 'What OWASP category covers SQL injection and XSS?', a: 'injection', reveal: 'A03 - Injection' },
+                400: { q: 'What OWASP category covers using libraries with known security flaws?', a: 'vulnerable components', reveal: 'A06 - Vulnerable and Outdated Components' },
+                500: { q: 'What OWASP category covers failures to detect, log, and respond to breaches?', a: 'logging', reveal: 'A09 - Security Logging and Monitoring Failures' }
+            },
+            'Incident': {
+                100: { q: 'What does IOC stand for in cybersecurity?', a: 'indicator of compromise', reveal: 'Indicator of Compromise' },
+                200: { q: 'What social engineering attack uses phone calls to trick victims?', a: 'vishing', reveal: 'Vishing (Voice Phishing)' },
+                300: { q: 'What is the first step in an incident response plan?', a: 'preparation', reveal: 'Preparation' },
+                400: { q: 'What type of malware encrypts files and demands payment?', a: 'ransomware', reveal: 'Ransomware' },
+                500: { q: 'What term describes an attacker who has been inside a network for a long time without detection?', a: 'apt', reveal: 'APT - Advanced Persistent Threat' }
+            }
+        };
+
+        function buildBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+
+            categories.forEach(cat => {
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.textContent = cat;
+                board.appendChild(header);
+            });
+
+            points.forEach(pts => {
+                categories.forEach(cat => {
+                    const tile = document.createElement('div');
+                    const key = `${cat}-${pts}`;
+                    tile.className = `tile ${solved[key] ? 'solved' : ''}`;
+                    tile.innerHTML = `<span class="points">${solved[key] ? '✓' : pts}</span>`;
+                    if (!solved[key]) {
+                        tile.onclick = () => openQuestion(cat, pts, key);
+                    }
+                    board.appendChild(tile);
+                });
+            });
+        }
+
+        function openQuestion(cat, pts, key) {
+            currentTile = key;
+            const q = questions[cat][pts];
+            document.getElementById('modalPoints').textContent = pts;
+            document.getElementById('modalCategory').textContent = cat;
+            document.getElementById('modalQuestion').textContent = q.q;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerResult').textContent = '';
+            document.getElementById('revealBox').style.display = 'none';
+            document.getElementById('questionModal').classList.add('active');
+        }
+
+        function submitAnswer() {
+            const answer = document.getElementById('answerInput').value.trim().toLowerCase();
+            const result = document.getElementById('answerResult');
+            const [cat, pts] = currentTile.split('-');
+            const correct = questions[cat][parseInt(pts)].a.toLowerCase();
+            const reveal = questions[cat][parseInt(pts)].reveal;
+
+            if (!answer) {
+                result.className = 'result error';
+                result.textContent = 'Please enter an answer';
+                return;
+            }
+
+            if (answer === correct || answer.includes(correct) || correct.includes(answer)) {
+                result.className = 'result success';
+                result.textContent = `✅ Correct! +${pts} points!`;
+                document.getElementById('revealBox').style.display = 'block';
+                document.getElementById('revealBox').textContent = `Answer: ${reveal}`;
+                solved[currentTile] = true;
+                sessionScore += parseInt(pts);
+                answeredCount++;
+                document.getElementById('sessionScore').textContent = sessionScore;
+                document.getElementById('answeredCount').textContent = answeredCount;
+                buildBoard();
+            } else {
+                result.className = 'result error';
+                result.textContent = '❌ Wrong answer! Try again.';
+            }
+        }
+
+        document.getElementById('answerInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitAnswer();
+        });
+
+        function closeModal() {
+            document.getElementById('questionModal').classList.remove('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/pages/login.html';
+        }
+
+        buildBoard();
+    </script>
+</body>
+</html>

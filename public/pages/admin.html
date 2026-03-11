@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTech CTF Hub - Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav {
+            background: #111;
+            border-bottom: 1px solid #ff4444;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 { font-size: 20px; color: #ff4444; }
+
+        .nav-links a {
+            color: #00ff41;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover { color: #fff; }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h2 { font-size: 24px; color: #ff4444; }
+
+        .btn {
+            padding: 10px 20px;
+            background: #00ff41;
+            color: #0a0a0a;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .btn:hover { background: #00cc33; }
+
+        .btn-danger {
+            background: transparent;
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .btn-danger:hover { background: #3a0000; }
+
+        .btn-warning {
+            background: transparent;
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+            padding: 6px 12px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .btn-warning:hover { background: #3a2a00; }
+
+        .btn-small {
+            padding: 6px 12px;
+            background: #00ff41;
+            color: #0a0a0a;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .btn-small:hover { background: #00cc33; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 32px;
+            color: #00ff41;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .section {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h3 { font-size: 16px; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 12px 20px;
+            text-align: left;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            border-bottom: 1px solid #222;
+            background: #1a1a1a;
+        }
+
+        td {
+            padding: 12px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #1a1a1a;
+            vertical-align: middle;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #1a1a1a; }
+
+        .badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .badge-beginner { background: #1a3a1a; color: #00ff41; }
+        .badge-intermediate { background: #3a2a00; color: #ffaa00; }
+        .badge-advanced { background: #3a0000; color: #ff4444; }
+        .badge-enabled { background: #1a3a1a; color: #00ff41; }
+        .badge-disabled { background: #3a0000; color: #ff4444; }
+
+        .actions { display: flex; gap: 8px; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            padding: 30px;
+            width: 600px;
+            max-width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
+        }
+
+        .modal-header h2 { font-size: 18px; }
+
+        .close {
+            cursor: pointer;
+            font-size: 20px;
+            color: #888;
+        }
+
+        .close:hover { color: #fff; }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00ff41;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .result-msg {
+            margin-top: 10px;
+            font-size: 13px;
+            min-height: 20px;
+        }
+
+        .success { color: #00ff41; }
+        .error { color: #ff4444; }
+
+        .danger-zone {
+            background: #1a0000;
+            border: 1px solid #ff4444;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .danger-zone h3 {
+            color: #ff4444;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .danger-zone p {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>⚡ UTech CTF Hub</h1>
+    <div class="nav-links">
+        <a href="/pages/learn.html">Learn</a>
+        <a href="/pages/challenges.html">Challenges</a>
+        <a href="/pages/jeopardy.html">Jeopardy</a>
+        <a href="/pages/quizzes.html">Quizzes</a>
+        <a href="/pages/scoreboard.html">Scoreboard</a>
+        <a href="#" id="adminLink" style="display:none; color:#ff4444;">Admin</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+    <div class="nav-user" id="navUser"></div>
+</nav>
+
+    <div class="container">
+        <div class="admin-header">
+            <h2>⚠ Admin Dashboard</h2>
+            <button class="btn" onclick="openAddModal()">+ Add Challenge</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="statTotal">0</h3>
+                <p>Total Challenges</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="statUsers">0</h3>
+                <p>Registered Users</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="statSolves">0</h3>
+                <p>Total Solves</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="statEnabled">0</h3>
+                <p>Active Challenges</p>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="danger-zone">
+            <h3>⚠ Danger Zone</h3>
+            <p>Reset the scoreboard at the start of a new semester. This will clear all solves and reset all user points to zero.</p>
+            <button class="btn-danger" onclick="resetScoreboard()">🔄 Reset Scoreboard (New Semester)</button>
+        </div>
+
+        <!-- Challenges Table -->
+        <div class="section">
+            <div class="section-header">
+                <h3>📋 All Challenges</h3>
+                <span id="challengeCount" style="color:#888;font-size:13px;"></span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Difficulty</th>
+                        <th>Points</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="challengeTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="challengeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Challenge</h2>
+                <span class="close" onclick="closeModal()">✕</span>
+            </div>
+            <input type="hidden" id="editId" />
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="fTitle" placeholder="Challenge title" />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="fCategory">
+                        <option>Web Hacking</option>
+                        <option>Cryptography</option>
+                        <option>Network Security</option>
+                        <option>Reverse Engineering</option>
+                        <option>Data Security</option>
+                        <option>Social Engineering</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Difficulty</label>
+                    <select id="fDifficulty">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Points</label>
+                    <input type="number" id="fPoints" placeholder="100" />
+                </div>
+                <div class="form-group">
+                    <label>Flag (e.g. CTF{flag_here})</label>
+                    <input type="text" id="fFlag" placeholder="CTF{...}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="fDescription" placeholder="Challenge description..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Hint (optional)</label>
+                <input type="text" id="fHint" placeholder="Hint for students..." />
+            </div>
+            <button class="btn" onclick="saveChallenge()" style="width:100%">SAVE CHALLENGE</button>
+            <div class="result-msg" id="modalMsg"></div>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.role === 'admin') {
+    document.getElementById('adminLink').style.display = 'inline';
+    document.getElementById('adminLink').href = '/pages/admin.html';
+}
+        if (!user || user.role !== 'admin') {
+            alert('Access denied. Admins only.');
+            window.location.href = '/pages/login.html';
+        }
+
+        const token = localStorage.getItem('token');
+
+        async function loadStats() {
+            const res = await fetch('/api/admin/stats', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            document.getElementById('statTotal').textContent = data.totalChallenges || 0;
+            document.getElementById('statUsers').textContent = data.totalUsers || 0;
+            document.getElementById('statSolves').textContent = data.totalSolves || 0;
+            document.getElementById('statEnabled').textContent = data.enabledChallenges || 0;
+        }
+
+        async function loadChallenges() {
+            const res = await fetch('/api/admin/challenges', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const challenges = await res.json();
+            document.getElementById('challengeCount').textContent = `${challenges.length} challenges`;
+
+            document.getElementById('challengeTable').innerHTML = challenges.map(c => `
+                <tr>
+                    <td>${c.title}</td>
+                    <td>${c.category}</td>
+                    <td><span class="badge badge-${c.difficulty.toLowerCase()}">${c.difficulty}</span></td>
+                    <td>${c.points}</td>
+                    <td><span class="badge ${c.is_enabled ? 'badge-enabled' : 'badge-disabled'}">
+                        ${c.is_enabled ? 'Enabled' : 'Disabled'}
+                    </span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn-small" onclick="editChallenge(${c.id})">Edit</button>
+                            <button class="btn-warning" onclick="toggleChallenge(${c.id}, ${c.is_enabled})">
+                                ${c.is_enabled ? 'Disable' : 'Enable'}
+                            </button>
+                            <button class="btn-danger" onclick="deleteChallenge(${c.id})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add Challenge';
+            document.getElementById('editId').value = '';
+            document.getElementById('fTitle').value = '';
+            document.getElementById('fCategory').value = 'Web Hacking';
+            document.getElementById('fDifficulty').value = 'Beginner';
+            document.getElementById('fPoints').value = '';
+            document.getElementById('fFlag').value = '';
+            document.getElementById('fDescription').value = '';
+            document.getElementById('fHint').value = '';
+            document.getElementById('modalMsg').textContent = '';
+            document.getElementById('challengeModal').classList.add('active');
+        }
+
+        async function editChallenge(id) {
+            const res = await fetch(`/api/admin/challenges/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const c = await res.json();
+            document.getElementById('modalTitle').textContent = 'Edit Challenge';
+            document.getElementById('editId').value = c.id;
+            document.getElementById('fTitle').value = c.title;
+            document.getElementById('fCategory').value = c.category;
+            document.getElementById('fDifficulty').value = c.difficulty;
+            document.getElementById('fPoints').value = c.points;
+            document.getElementById('fFlag').value = '';
+            document.getElementById('fDescription').value = c.description;
+            document.getElementById('fHint').value = c.hint || '';
+            document.getElementById('modalMsg').textContent = '';
+            document.getElementById('challengeModal').classList.add('active');
+        }
+
+        async function saveChallenge() {
+            const id = document.getElementById('editId').value;
+            const msg = document.getElementById('modalMsg');
+            const body = {
+                title: document.getElementById('fTitle').value,
+                category: document.getElementById('fCategory').value,
+                difficulty: document.getElementById('fDifficulty').value,
+                points: parseInt(document.getElementById('fPoints').value),
+                flag: document.getElementById('fFlag').value,
+                description: document.getElementById('fDescription').value,
+                hint: document.getElementById('fHint').value
+            };
+
+            const url = id ? `/api/admin/challenges/${id}` : '/api/admin/challenges';
+            const method = id ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(body)
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                msg.className = 'result-msg success';
+                msg.textContent = data.message;
+                loadChallenges();
+                loadStats();
+                setTimeout(closeModal, 1500);
+            } else {
+                msg.className = 'result-msg error';
+                msg.textContent = data.error;
+            }
+        }
+
+        async function toggleChallenge(id, currentStatus) {
+            await fetch(`/api/admin/challenges/${id}/toggle`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            loadChallenges();
+            loadStats();
+        }
+
+        async function deleteChallenge(id) {
+            if (!confirm('Delete this challenge? This cannot be undone.')) return;
+            await fetch(`/api/admin/challenges/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            loadChallenges();
+            loadStats();
+        }
+
+        async function resetScoreboard() {
+            if (!confirm('Reset ALL scores? This will clear all solves and points for all users.')) return;
+            const res = await fetch('/api/admin/reset', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            alert(data.message);
+            loadStats();
+        }
+
+        function closeModal() {
+            document.getElementById('challengeModal').classList.remove('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/pages/login.html';
+        }
+
+        loadStats();
+        loadChallenges();
+    </script>
+</body>
+</html>

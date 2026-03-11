@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTech CTF Hub - Challenges</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Navbar */
+        nav {
+            background: #111;
+            border-bottom: 1px solid #00ff41;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 { font-size: 20px; }
+
+        .nav-links a {
+            color: #00ff41;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover { color: #fff; }
+
+        .nav-user {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Filters */
+        .filters {
+            padding: 20px 30px;
+            background: #111;
+            border-bottom: 1px solid #222;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        select {
+            background: #1a1a1a;
+            color: #00ff41;
+            border: 1px solid #333;
+            padding: 8px 12px;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        select:focus { outline: none; border-color: #00ff41; }
+
+        /* Challenge Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover { border-color: #00ff41; }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card h3 { font-size: 16px; }
+
+        .points {
+            color: #00ff41;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .badge-category { background: #1a3a1a; color: #00ff41; }
+        .badge-beginner { background: #1a3a1a; color: #00ff41; }
+        .badge-intermediate { background: #3a2a00; color: #ffaa00; }
+        .badge-advanced { background: #3a0000; color: #ff4444; }
+
+        .card p {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            padding: 30px;
+            width: 550px;
+            max-width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 { font-size: 20px; }
+
+        .close {
+            cursor: pointer;
+            font-size: 20px;
+            color: #888;
+        }
+
+        .close:hover { color: #fff; }
+
+        .modal p {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .flag-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .flag-input input {
+            flex: 1;
+            padding: 10px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            border-radius: 4px;
+        }
+
+        .flag-input input:focus { outline: none; border-color: #00ff41; }
+
+        .btn {
+            padding: 10px 20px;
+            background: #00ff41;
+            color: #0a0a0a;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn:hover { background: #00cc33; }
+
+        .btn-hint {
+            background: transparent;
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+            padding: 8px 15px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .btn-hint:hover { background: #3a2a00; }
+
+        .result {
+            margin-top: 10px;
+            font-size: 13px;
+            min-height: 20px;
+        }
+
+        .success { color: #00ff41; }
+        .error { color: #ff4444; }
+
+        .hint-box {
+            background: #1a1a00;
+            border: 1px solid #ffaa00;
+            padding: 10px;
+            border-radius: 4px;
+            color: #ffaa00;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .solved-badge {
+            background: #00ff41;
+            color: #0a0a0a;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .no-challenges {
+            text-align: center;
+            color: #888;
+            padding: 60px;
+            grid-column: 1/-1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+<nav>
+    <h1>⚡ UTech CTF Hub</h1>
+    <div class="nav-links">
+        <a href="/pages/learn.html">Learn</a>
+        <a href="/pages/challenges.html">Challenges</a>
+        <a href="/pages/jeopardy.html">Jeopardy</a>
+        <a href="/pages/quizzes.html">Quizzes</a>
+        <a href="/pages/scoreboard.html">Scoreboard</a>
+        <a href="#" id="adminLink" style="display:none; color:#ff4444;">Admin</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+    <div class="nav-user" id="navUser"></div>
+</nav>
+
+    <!-- Filters -->
+    <div class="filters">
+        <select id="filterCategory" onchange="filterChallenges()">
+            <option value="">All Categories</option>
+            <option value="Web Hacking">Web Hacking</option>
+            <option value="Cryptography">Cryptography</option>
+            <option value="Network Security">Network Security</option>
+            <option value="Reverse Engineering">Reverse Engineering</option>
+            <option value="Data Security">Data Security</option>
+            <option value="Social Engineering">Social Engineering</option>
+        </select>
+
+        <select id="filterDifficulty" onchange="filterChallenges()">
+            <option value="">All Difficulties</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+    </div>
+
+    <!-- Challenge Grid -->
+    <div class="grid" id="challengeGrid"></div>
+
+    <!-- Challenge Modal -->
+    <div class="modal" id="challengeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <span class="close" onclick="closeModal()">✕</span>
+            </div>
+            <div class="badges" id="modalBadges"></div>
+            <p id="modalDescription"></p>
+            <div class="flag-input">
+                <input type="text" id="flagInput" placeholder="Enter flag here e.g. CTF{...}" />
+                <button class="btn" onclick="submitFlag()">SUBMIT</button>
+            </div>
+            <button class="btn-hint" onclick="showHint()">💡 Show Hint</button>
+            <div class="hint-box" id="hintBox"></div>
+            <div class="result" id="flagResult"></div>
+        </div>
+    </div>
+
+    <script>
+        let challenges = [];
+        let currentChallenge = null;
+        let solvedChallenges = [];
+        const user = JSON.parse(localStorage.getItem('user'));
+if (user && user.role === 'admin') {
+    document.getElementById('adminLink').style.display = 'inline';
+    document.getElementById('adminLink').href = '/pages/admin.html';
+}
+        // Check login
+        if (!user) window.location.href = '/pages/login.html';
+
+        document.getElementById('navUser').textContent = 
+            `👤 ${user.username} | ⚡ ${user.total_points || 0} pts`;
+
+        // Load challenges
+        async function loadChallenges() {
+            const res = await fetch('/api/challenges');
+            challenges = await res.json();
+            renderChallenges(challenges);
+        }
+
+        function renderChallenges(list) {
+            const grid = document.getElementById('challengeGrid');
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="no-challenges">No challenges found</div>`;
+                return;
+            }
+
+            grid.innerHTML = list.map(c => `
+                <div class="card" onclick="openChallenge(${c.id})">
+                    <div class="card-header">
+                        <h3>${c.title}</h3>
+                        <span class="points">${c.points}pts</span>
+                    </div>
+                    <div class="badges">
+                        <span class="badge badge-category">${c.category}</span>
+                        <span class="badge badge-${c.difficulty.toLowerCase()}">${c.difficulty}</span>
+                    </div>
+                    <p>${c.description.substring(0, 100)}...</p>
+                </div>
+            `).join('');
+        }
+
+        function filterChallenges() {
+            const category = document.getElementById('filterCategory').value;
+            const difficulty = document.getElementById('filterDifficulty').value;
+
+            let filtered = challenges;
+            if (category) filtered = filtered.filter(c => c.category === category);
+            if (difficulty) filtered = filtered.filter(c => c.difficulty === difficulty);
+
+            renderChallenges(filtered);
+        }
+
+        function openChallenge(id) {
+            currentChallenge = challenges.find(c => c.id === id);
+            if (!currentChallenge) return;
+
+            document.getElementById('modalTitle').textContent = currentChallenge.title;
+            document.getElementById('modalDescription').textContent = currentChallenge.description;
+            document.getElementById('modalBadges').innerHTML = `
+                <span class="badge badge-category">${currentChallenge.category}</span>
+                <span class="badge badge-${currentChallenge.difficulty.toLowerCase()}">${currentChallenge.difficulty}</span>
+                <span class="badge badge-category">${currentChallenge.points} pts</span>
+            `;
+            document.getElementById('flagInput').value = '';
+            document.getElementById('flagResult').textContent = '';
+            document.getElementById('hintBox').style.display = 'none';
+            document.getElementById('challengeModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('challengeModal').classList.remove('active');
+        }
+
+        function showHint() {
+            const hintBox = document.getElementById('hintBox');
+            hintBox.style.display = 'block';
+            hintBox.textContent = currentChallenge.hint 
+                ? `💡 Hint: ${currentChallenge.hint}` 
+                : '💡 No hint available for this challenge';
+        }
+
+        async function submitFlag() {
+            const flag = document.getElementById('flagInput').value;
+            const result = document.getElementById('flagResult');
+
+            if (!flag) {
+                result.className = 'result error';
+                result.textContent = 'Please enter a flag';
+                return;
+            }
+
+            const res = await fetch(`/api/challenges/${currentChallenge.id}/submit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flag, user_id: user.id })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                result.className = 'result success';
+                result.textContent = `✅ ${data.message} +${data.points} points!`;
+                user.total_points = (user.total_points || 0) + data.points;
+                localStorage.setItem('user', JSON.stringify(user));
+                document.getElementById('navUser').textContent = 
+                    `👤 ${user.username} | ⚡ ${user.total_points} pts`;
+            } else {
+                result.className = 'result error';
+                result.textContent = `❌ ${data.error}`;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/pages/login.html';
+        }
+
+        loadChallenges();
+    </script>
+</body>
+</html>
+```

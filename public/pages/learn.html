@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTech CTF Hub - Learn</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav {
+            background: #111;
+            border-bottom: 1px solid #00ff41;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 { font-size: 20px; }
+
+        .nav-links a {
+            color: #00ff41;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover { color: #fff; }
+        .nav-user { font-size: 13px; color: #888; }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h2 { font-size: 28px; margin-bottom: 5px; }
+        .page-title p { color: #888; font-size: 13px; }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .topic-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 25px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .topic-card:hover { border-color: #00ff41; }
+
+        .topic-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .topic-icon { font-size: 28px; }
+        .topic-header h3 { font-size: 16px; }
+
+        .topic-category {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            background: #1a3a1a;
+            color: #00ff41;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .topic-card p {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .topic-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .read-btn {
+            color: #00ff41;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            padding: 35px;
+            width: 700px;
+            max-width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
+        }
+
+        .modal-header h2 { font-size: 22px; }
+
+        .close {
+            cursor: pointer;
+            font-size: 20px;
+            color: #888;
+        }
+
+        .close:hover { color: #fff; }
+
+        .section-title {
+            color: #00ff41;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin: 20px 0 10px;
+            letter-spacing: 1px;
+        }
+
+        .bullet-points li {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.8;
+            margin-left: 20px;
+            list-style: none;
+        }
+
+        .bullet-points li::before {
+            content: '▶ ';
+            color: #00ff41;
+            font-size: 10px;
+        }
+
+        .example-box {
+            background: #0a1a0a;
+            border-left: 3px solid #00ff41;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 0 4px 4px 0;
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .related-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .related-link {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #00ff41;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .related-link:hover { border-color: #00ff41; }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>⚡ UTech CTF Hub</h1>
+    <div class="nav-links">
+        <a href="/pages/learn.html">Learn</a>
+        <a href="/pages/challenges.html">Challenges</a>
+        <a href="/pages/jeopardy.html">Jeopardy</a>
+        <a href="/pages/quizzes.html">Quizzes</a>
+        <a href="/pages/scoreboard.html">Scoreboard</a>
+        <a href="#" id="adminLink" style="display:none; color:#ff4444;">Admin</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+    <div class="nav-user" id="navUser"></div>
+</nav>
+
+    <div class="container">
+        <div class="page-title">
+            <h2>📚 Learn</h2>
+            <p>Study the topics below before attempting challenges</p>
+        </div>
+        <div class="topics-grid" id="topicsGrid"></div>
+    </div>
+
+    <div class="modal" id="topicModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <span class="close" onclick="closeModal()">✕</span>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.role === 'admin') {
+        document.getElementById('adminLink').style.display = 'inline';
+        document.getElementById('adminLink').href = '/pages/admin.html';
+    }
+        if (!user) window.location.href = '/pages/login.html';
+        document.getElementById('navUser').textContent =
+            `👤 ${user.username} | ⚡ ${user.total_points || 0} pts`;
+
+        const topics = [
+            {
+                icon: '🔐',
+                title: 'SQL Injection Basics',
+                category: 'Web Hacking',
+                description: 'Learn how SQL injection works and how attackers bypass login forms using malicious queries.',
+                points: [
+                    'SQL Injection (SQLi) inserts malicious SQL code into input fields',
+                    'Attackers can bypass login, extract data, or delete records',
+                    'Most common web vulnerability according to OWASP Top 10',
+                    "Classic payload: admin followed by -- comments out the password check",
+                    'Blind SQLi uses true/false responses to extract data slowly',
+                    'Always use parameterized queries to prevent SQLi',
+                    'Input validation and sanitization are key defenses',
+                    'SQLMap is a popular tool used to automate SQL injection',
+                    'Error-based SQLi extracts info from database error messages',
+                    'Union-based SQLi appends results from other tables'
+                ],
+                examples: [
+                    "Login bypass: Username = admin then -- | Password = anything",
+                    "Union attack: UNION SELECT username,password FROM users",
+                    "Boolean blind: id=1 AND 1=1 (true) vs id=1 AND 1=2 (false)"
+                ],
+                related: ['SQL Login Bypass', 'Blind SQL Injection']
+            },
+            {
+                icon: '🌐',
+                title: 'XSS - Cross Site Scripting',
+                category: 'Web Hacking',
+                description: 'Understand how XSS attacks inject malicious scripts into web pages viewed by other users.',
+                points: [
+                    'XSS allows attackers to inject client-side scripts into web pages',
+                    'Reflected XSS - malicious script comes from HTTP request',
+                    'Stored XSS - malicious script is saved in the database',
+                    'DOM-based XSS - vulnerability exists in client-side code',
+                    'XSS can steal cookies, session tokens, and credentials',
+                    'Content Security Policy (CSP) helps prevent XSS',
+                    'Always encode output when displaying user input',
+                    'HttpOnly cookie flag prevents JavaScript from reading cookies',
+                    'XSS can be used for phishing and keylogging',
+                    'Input validation alone is not enough - output encoding is critical'
+                ],
+                examples: [
+                    "Basic XSS payload uses script tags with alert function",
+                    "Cookie steal payload redirects to attacker site with cookie value",
+                    "Image XSS uses onerror attribute to execute JavaScript"
+                ],
+                related: ['XSS Playground']
+            },
+            {
+                icon: '🔑',
+                title: 'Cryptography Essentials',
+                category: 'Cryptography',
+                description: 'Learn the fundamentals of encoding, encryption, and common cipher techniques used in CTF challenges.',
+                points: [
+                    'Base64 is encoding not encryption - anyone can decode it',
+                    'ROT13 shifts each letter 13 places in the alphabet',
+                    'Caesar cipher shifts letters by a fixed number',
+                    'Vigenere cipher uses a keyword to shift letters',
+                    'Symmetric encryption uses the same key to encrypt and decrypt',
+                    'Asymmetric encryption uses public/private key pairs',
+                    'RSA is the most common asymmetric encryption algorithm',
+                    'Hashing is one-way - you cannot decrypt a hash',
+                    'MD5 and SHA1 are considered weak/broken for security use',
+                    'SHA-256 is the current standard for secure hashing'
+                ],
+                examples: [
+                    'Base64: CTF{hello} encodes to Q1RGe2hlbGxvfQ==',
+                    'ROT13: CTF{hello} becomes PGS{uryyb}',
+                    'RSA: n = p * q where p and q are large prime numbers'
+                ],
+                related: ['Base64 Decoder', 'ROT13 Mystery', 'Vigenere Cipher', 'RSA Concept Puzzle']
+            },
+            {
+                icon: '📡',
+                title: 'Network Security & PCAP',
+                category: 'Network Security',
+                description: 'Understand network protocols, common ports, and how to analyze packet captures.',
+                points: [
+                    'PCAP files capture raw network traffic for analysis',
+                    'Wireshark is the most popular tool for reading PCAP files',
+                    'HTTP traffic is unencrypted and can be read in plain text',
+                    'HTTPS encrypts traffic using TLS/SSL',
+                    'Port 22 = SSH, Port 80 = HTTP, Port 443 = HTTPS',
+                    'Port 21 = FTP, Port 25 = SMTP, Port 3306 = MySQL',
+                    'TCP is connection-oriented, UDP is connectionless',
+                    'DNS resolves domain names to IP addresses on port 53',
+                    'Nmap is used to scan networks and discover open ports',
+                    'Exposed database ports like 3306 are a critical security risk'
+                ],
+                examples: [
+                    'Wireshark filter: http.request.method == GET',
+                    'Nmap scan: nmap -sV -p 1-1000 192.168.1.1',
+                    'Common risky exposure: MySQL port 3306 open to 0.0.0.0'
+                ],
+                related: ['What Port Is That?', 'HTTP Object in PCAP', 'Network Map Analysis']
+            },
+            {
+                icon: '🛡️',
+                title: 'Data Security Fundamentals',
+                category: 'Data Security',
+                description: 'Learn about password storage, access control, and common data security vulnerabilities.',
+                points: [
+                    'Passwords must never be stored in plain text',
+                    'Hashing + salting is the correct way to store passwords',
+                    'bcrypt, Argon2, and PBKDF2 are secure password hashing algorithms',
+                    'MD5 and SHA1 should NOT be used for password storage',
+                    'IDOR - Insecure Direct Object Reference allows unauthorized access',
+                    'Access control must be enforced server-side not just client-side',
+                    'Backup files left on web servers are a common security risk',
+                    'Principle of least privilege - users only get access they need',
+                    'Data encryption at rest protects stored sensitive data',
+                    'Regular security audits help identify misconfigurations'
+                ],
+                examples: [
+                    'Plain text storage: password=hello123 (NEVER do this)',
+                    'IDOR: changing /profile?id=5 to /profile?id=1 accesses admin',
+                    'Exposed backup: /backup/database.sql accessible publicly'
+                ],
+                related: ['Weak Password Storage', 'IDOR Logic Flaw', 'Backup File Exposure']
+            },
+            {
+                icon: '🎭',
+                title: 'Social Engineering Awareness',
+                category: 'Social Engineering',
+                description: 'Recognize phishing, pretexting, and manipulation tactics used by attackers.',
+                points: [
+                    'Social engineering exploits human psychology not technology',
+                    'Phishing uses fake emails/sites to steal credentials',
+                    'Spear phishing targets specific individuals with personalized attacks',
+                    'Pretexting creates a fake scenario to manipulate victims',
+                    'Vishing is phishing via phone calls',
+                    'Smishing is phishing via SMS text messages',
+                    'Always verify sender email addresses carefully',
+                    'Hover over links to check real destination before clicking',
+                    'IT should always verify identity before resetting passwords',
+                    'Urgency and fear are common manipulation tactics'
+                ],
+                examples: [
+                    'Phishing: Email from support@paypa1.com (fake l replaced with 1)',
+                    'Pretexting: Attacker calls IT claiming to be new employee',
+                    'Link mismatch: Shows paypal.com but actually goes to steal-data.com'
+                ],
+                related: ['Phishing Spotter', 'Pretexting Scenario']
+            },
+            {
+                icon: '⚙️',
+                title: 'Reverse Engineering Basics',
+                category: 'Reverse Engineering',
+                description: 'Learn beginner-friendly techniques for analyzing binaries and extracting hidden information.',
+                points: [
+                    'Reverse engineering analyzes software to understand how it works',
+                    'The strings command extracts readable text from binary files',
+                    'Hex editors allow viewing raw bytes of any file',
+                    'Disassemblers convert machine code back to assembly language',
+                    'XOR is commonly used in simple obfuscation - it is reversible',
+                    'If A XOR B = C then C XOR B = A',
+                    'Decompilers attempt to convert binaries back to source code',
+                    'Always work in a safe isolated environment when analyzing binaries',
+                    'File signatures (magic bytes) identify file types regardless of extension',
+                    'GDB and x64dbg are popular debugging tools for reverse engineering'
+                ],
+                examples: [
+                    'strings suspicious_file | grep CTF',
+                    'XOR decode: 0x12 XOR 0x41 = 0x53 = S in ASCII',
+                    'file unknown_binary identifies file type from magic bytes'
+                ],
+                related: ['String Extraction', 'Advanced Crackme']
+            },
+            {
+                icon: '🔟',
+                title: 'OWASP Top 10 Overview',
+                category: 'Web Hacking',
+                description: 'Understand the most critical web application security risks according to OWASP.',
+                points: [
+                    'OWASP = Open Web Application Security Project',
+                    'A01 - Broken Access Control is the #1 web vulnerability',
+                    'A02 - Cryptographic Failures includes weak encryption and plain text storage',
+                    'A03 - Injection includes SQL, NoSQL, and command injection',
+                    'A04 - Insecure Design covers architectural security flaws',
+                    'A05 - Security Misconfiguration includes exposed backups and default passwords',
+                    'A06 - Vulnerable Components means using outdated libraries',
+                    'A07 - Authentication Failures includes weak passwords and broken session management',
+                    'A08 - Software Integrity Failures covers supply chain attacks',
+                    'A09 - Logging Failures means not detecting or recording attacks'
+                ],
+                examples: [
+                    'A01 Broken Access Control: IDOR vulnerability changing id=5 to id=1',
+                    'A03 Injection: SQL injection in login form',
+                    'A05 Misconfiguration: Database backup file exposed publicly'
+                ],
+                related: ['SQL Login Bypass', 'XSS Playground', 'Backup File Exposure']
+            }
+        ];
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function renderTopics() {
+            const grid = document.getElementById('topicsGrid');
+            grid.innerHTML = topics.map((t, i) => `
+                <div class="topic-card" onclick="openTopic(${i})">
+                    <div class="topic-header">
+                        <span class="topic-icon">${t.icon}</span>
+                        <h3>${t.title}</h3>
+                    </div>
+                    <span class="topic-category">${t.category}</span>
+                    <p>${t.description}</p>
+                    <div class="topic-footer">
+                        <span>${t.points.length} learning points</span>
+                        <span class="read-btn">Read More →</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openTopic(index) {
+            const t = topics[index];
+            document.getElementById('modalTitle').textContent = `${t.icon} ${t.title}`;
+            document.getElementById('modalBody').innerHTML = `
+                <p class="section-title">📌 Learning Points</p>
+                <ul class="bullet-points">
+                    ${t.points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}
+                </ul>
+                <p class="section-title">💡 Examples</p>
+                ${t.examples.map(e => `<div class="example-box">${escapeHtml(e)}</div>`).join('')}
+                <p class="section-title">🔗 Related Challenges</p>
+                <div class="related-links">
+                    ${t.related.map(r => `
+                        <a class="related-link" href="/pages/challenges.html">${escapeHtml(r)}</a>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('topicModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('topicModal').classList.remove('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/pages/login.html';
+        }
+
+        renderTopics();
+    </script>
+</body>
+</html>

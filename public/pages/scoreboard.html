@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTech CTF Hub - Scoreboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav {
+            background: #111;
+            border-bottom: 1px solid #00ff41;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 { font-size: 20px; }
+
+        .nav-links a {
+            color: #00ff41;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover { color: #fff; }
+
+        .nav-user { font-size: 13px; color: #888; }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h2 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .scoreboard {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .scoreboard-header {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 100px;
+            padding: 15px 20px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #00ff41;
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .scoreboard-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 100px;
+            padding: 15px 20px;
+            border-bottom: 1px solid #1a1a1a;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .scoreboard-row:hover { background: #1a1a1a; }
+
+        .scoreboard-row:last-child { border-bottom: none; }
+
+        .rank {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        .username { font-size: 15px; }
+
+        .solves {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .points-col {
+            color: #00ff41;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: right;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 8px;
+            background: #1a3a1a;
+            color: #00ff41;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px;
+            color: #888;
+        }
+
+        .refresh-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 10px 30px;
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .refresh-btn:hover { background: #1a1a1a; }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>⚡ UTech CTF Hub</h1>
+    <div class="nav-links">
+        <a href="/pages/learn.html">Learn</a>
+        <a href="/pages/challenges.html">Challenges</a>
+        <a href="/pages/jeopardy.html">Jeopardy</a>
+        <a href="/pages/quizzes.html">Quizzes</a>
+        <a href="/pages/scoreboard.html">Scoreboard</a>
+        <a href="#" id="adminLink" style="display:none; color:#ff4444;">Admin</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+    <div class="nav-user" id="navUser"></div>
+</nav>
+
+    <div class="container">
+        <div class="page-title">
+            <h2>🏆 Scoreboard</h2>
+            <p>Top hackers of UTech CTF Hub</p>
+        </div>
+
+        <div class="scoreboard">
+            <div class="scoreboard-header">
+                <span>Rank</span>
+                <span>Username</span>
+                <span>Solves</span>
+                <span style="text-align:right">Points</span>
+            </div>
+            <div id="scoreboardBody"></div>
+        </div>
+
+        <button class="refresh-btn" onclick="loadScoreboard()">↻ Refresh</button>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.role === 'admin') {
+    document.getElementById('adminLink').style.display = 'inline';
+    document.getElementById('adminLink').href = '/pages/admin.html';
+}
+        if (!user) window.location.href = '/pages/login.html';
+
+        document.getElementById('navUser').textContent =
+            `👤 ${user.username} | ⚡ ${user.total_points || 0} pts`;
+
+        async function loadScoreboard() {
+            const res = await fetch('/api/scoreboard');
+            const data = await res.json();
+            const body = document.getElementById('scoreboardBody');
+
+            if (data.length === 0) {
+                body.innerHTML = `<div class="empty">No scores yet. Be the first to solve a challenge!</div>`;
+                return;
+            }
+
+            body.innerHTML = data.map((player, index) => {
+                const rank = index + 1;
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+                const isCurrentUser = player.username === user.username;
+
+                return `
+                    <div class="scoreboard-row" style="${isCurrentUser ? 'background:#0a1a0a;' : ''}">
+                        <span class="rank ${rankClass}">${rankIcon}</span>
+                        <span class="username">
+                            ${player.username}
+                            ${isCurrentUser ? '<span class="badge">YOU</span>' : ''}
+                        </span>
+                        <span class="solves">${player.solve_count} solves</span>
+                        <span class="points-col">${player.total_points} pts</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/pages/login.html';
+        }
+
+        loadScoreboard();
+    </script>
+</body>
+</html>

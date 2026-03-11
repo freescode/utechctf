@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTech CTF Hub - Quizzes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav {
+            background: #111;
+            border-bottom: 1px solid #00ff41;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 { font-size: 20px; }
+
+        .nav-links a {
+            color: #00ff41;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover { color: #fff; }
+        .nav-user { font-size: 13px; color: #888; }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h2 { font-size: 28px; margin-bottom: 5px; }
+        .page-title p { color: #888; font-size: 13px; }
+
+        /* Quiz Selection */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .quiz-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 25px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            text-align: center;
+        }
+
+        .quiz-card:hover { border-color: #00ff41; }
+
+        .quiz-icon { font-size: 40px; margin-bottom: 15px; }
+
+        .quiz-card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .quiz-card p {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .quiz-meta span { color: #00ff41; }
+
+        /* Quiz Area */
+        .quiz-area { display: none; }
+        .quiz-area.active { display: block; }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
+        }
+
+        .quiz-header h3 { font-size: 20px; }
+
+        .progress-bar {
+            background: #222;
+            border-radius: 4px;
+            height: 6px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #00ff41;
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .question-card {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 18px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            text-align: left;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+
+        .option:hover { border-color: #00ff41; background: #1a2a1a; }
+
+        .option.correct {
+            background: #0a2a0a;
+            border-color: #00ff41;
+            color: #00ff41;
+        }
+
+        .option.wrong {
+            background: #2a0a0a;
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .option.disabled { cursor: default; pointer-events: none; }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #0a2a0a;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            display: block;
+        }
+
+        .feedback.wrong {
+            background: #2a0a0a;
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            display: block;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            background: #00ff41;
+            color: #0a0a0a;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn:hover { background: #00cc33; }
+
+        .btn-outline {
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn-outline:hover { background: #1a1a1a; }
+
+        /* Results */
+        .results-card {
+            background: #111;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results-icon { font-size: 60px; margin-bottom: 20px; }
+
+        .results-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00ff41;
+            margin-bottom: 10px;
+        }
+
+        .results-label {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .results-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .breakdown-item {
+            text-align: center;
+        }
+
+        .breakdown-item strong {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .breakdown-item span { font-size: 12px; color: #888; }
+        .correct-color { color: #00ff41; }
+        .wrong-color { color: #ff4444; }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>⚡ UTech CTF Hub</h1>
+    <div class="nav-links">
+        <a href="/pages/learn.html">Learn</a>
+        <a href="/pages/challenges.html">Challenges</a>
+        <a href="/pages/jeopardy.html">Jeopardy</a>
+        <a href="/pages/quizzes.html">Quizzes</a>
+        <a href="/pages/scoreboard.html">Scoreboard</a>
+        <a href="#" id="adminLink" style="display:none; color:#ff4444;">Admin</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+    <div class="nav-user" id="navUser"></div>
+</nav>
+    <div class="container">
+        <!-- Quiz Selection -->
+        <div id="quizSelection">
+            <div class="page-title">
+                <h2>📝 Quizzes</h2>
+                <p>Test your knowledge across different cybersecurity topics</p>
+            </div>
+            <div class="quiz-grid" id="quizGrid"></div>
+        </div>
+
+        <!-- Quiz Area -->
+        <div class="quiz-area" id="quizArea">
+            <div class="quiz-header">
+                <h3 id="quizTitle"></h3>
+                <button class="btn-outline" onclick="backToQuizzes()">← Back</button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="questionArea"></div>
+            <div class="nav-buttons">
+                <div></div>
+                <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none">
+                    Next →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.role === 'admin') {
+    document.getElementById('adminLink').style.display = 'inline';
+    document.getElementById('adminLink').href = '/pages/admin.html';
+}
+        if (!user) window.location.href = '/pages/login.html';
+
+        document.getElementById('navUser').textContent =
+            `👤 ${user.username} | ⚡ ${user.total_points || 0} pts`;
+
+        let currentQuiz = null;
+        let currentQuestion = 0;
+        let score = 0;
+        let correct = 0;
+        let wrong = 0;
+
+        const quizzes = [
+            {
+                id: 1,
+                icon: '🔟',
+                title: 'OWASP Top 10',
+                description: 'Test your knowledge of the most critical web vulnerabilities',
+                questions: [
+                    { q: 'What is the #1 vulnerability in OWASP Top 10 2021?', options: ['SQL Injection', 'Broken Access Control', 'XSS', 'Cryptographic Failures'], correct: 1, explanation: 'Broken Access Control moved to #1 in 2021, overtaking Injection.' },
+                    { q: 'What OWASP category does SQL Injection fall under?', options: ['A01 Broken Access Control', 'A02 Cryptographic Failures', 'A03 Injection', 'A05 Misconfiguration'], correct: 2, explanation: 'SQL Injection falls under A03 - Injection in the OWASP Top 10.' },
+                    { q: 'Storing passwords in plain text violates which OWASP category?', options: ['A03 Injection', 'A02 Cryptographic Failures', 'A01 Broken Access Control', 'A04 Insecure Design'], correct: 1, explanation: 'Plain text passwords are a Cryptographic Failure - passwords must be hashed.' },
+                    { q: 'What does IDOR stand for?', options: ['Internal Data Object Risk', 'Insecure Direct Object Reference', 'Indirect Data Object Redirect', 'Internal Direct Object Risk'], correct: 1, explanation: 'IDOR - Insecure Direct Object Reference - is a type of Broken Access Control.' },
+                    { q: 'Which OWASP category covers using outdated libraries with known vulnerabilities?', options: ['A04 Insecure Design', 'A07 Auth Failures', 'A06 Vulnerable Components', 'A08 Integrity Failures'], correct: 2, explanation: 'A06 covers Vulnerable and Outdated Components.' },
+                    { q: 'XSS (Cross Site Scripting) falls under which OWASP category?', options: ['A01 Broken Access Control', 'A03 Injection', 'A07 Auth Failures', 'A05 Misconfiguration'], correct: 1, explanation: 'XSS is classified under A03 - Injection in OWASP Top 10.' },
+                    { q: 'What OWASP category covers default passwords and exposed backup files?', options: ['A02 Cryptographic Failures', 'A03 Injection', 'A05 Security Misconfiguration', 'A09 Logging Failures'], correct: 2, explanation: 'A05 Security Misconfiguration covers default credentials and exposed files.' },
+                    { q: 'What does OWASP stand for?', options: ['Online Web App Security Project', 'Open Web Application Security Project', 'Official Web Attack Security Platform', 'Open Worldwide App Security Protocol'], correct: 1, explanation: 'OWASP stands for Open Web Application Security Project.' },
+                    { q: 'Which OWASP category covers failing to detect and log security breaches?', options: ['A07 Auth Failures', 'A08 Integrity Failures', 'A09 Logging Failures', 'A10 SSRF'], correct: 2, explanation: 'A09 covers Security Logging and Monitoring Failures.' },
+                    { q: 'A login page with no account lockout violates which OWASP category?', options: ['A03 Injection', 'A05 Misconfiguration', 'A07 Identification and Auth Failures', 'A01 Broken Access Control'], correct: 2, explanation: 'Missing account lockout is an Authentication Failure (A07).' }
+                ]
+            },
+            {
+                id: 2,
+                icon: '🔐',
+                title: 'Cryptography Basics',
+                description: 'Test your understanding of encoding, encryption and hashing',
+                questions: [
+                    { q: 'What is Base64?', options: ['An encryption algorithm', 'An encoding scheme', 'A hashing function', 'A cipher'], correct: 1, explanation: 'Base64 is encoding, not encryption. Anyone can decode it without a key.' },
+                    { q: 'ROT13 shifts each letter by how many places?', options: ['3', '7', '13', '26'], correct: 2, explanation: 'ROT13 rotates each letter 13 positions in the alphabet.' },
+                    { q: 'Which of these is a hashing algorithm?', options: ['AES', 'RSA', 'SHA-256', 'Base64'], correct: 2, explanation: 'SHA-256 is a cryptographic hashing algorithm producing a 256-bit hash.' },
+                    { q: 'What makes hashing different from encryption?', options: ['Hashing is faster', 'Hashing is one-way and irreversible', 'Hashing uses a key', 'Hashing produces longer output'], correct: 1, explanation: 'Hashing is one-way - you cannot reverse a hash to get the original data.' },
+                    { q: 'Which hashing algorithm is considered WEAK and should not be used for passwords?', options: ['bcrypt', 'SHA-256', 'Argon2', 'MD5'], correct: 3, explanation: 'MD5 is broken and vulnerable to collision attacks. Never use it for passwords.' },
+                    { q: 'What does asymmetric encryption use?', options: ['One shared key', 'Two keys - public and private', 'A password', 'A certificate only'], correct: 1, explanation: 'Asymmetric encryption uses a public key to encrypt and private key to decrypt.' },
+                    { q: 'What is RSA?', options: ['A hashing algorithm', 'A symmetric cipher', 'An asymmetric encryption algorithm', 'An encoding scheme'], correct: 2, explanation: 'RSA is the most widely used asymmetric encryption algorithm.' },
+                    { q: 'In RSA, what is n calculated as?', options: ['p + q', 'p * q', 'p / q', 'p - q'], correct: 1, explanation: 'In RSA, n = p * q where p and q are large prime numbers.' },
+                    { q: 'What is a salt in password hashing?', options: ['An encryption key', 'Random data added before hashing', 'A type of cipher', 'The hash output'], correct: 1, explanation: 'A salt is random data added to a password before hashing to prevent rainbow table attacks.' },
+                    { q: 'Which is the most secure way to store passwords?', options: ['Plain text', 'Base64 encoded', 'MD5 hashed', 'bcrypt hashed with salt'], correct: 3, explanation: 'bcrypt with salt is the recommended way to store passwords securely.' }
+                ]
+            },
+            {
+                id: 3,
+                icon: '📡',
+                title: 'Network Security',
+                description: 'Test your knowledge of ports, protocols and network attacks',
+                questions: [
+                    { q: 'What port does HTTP use by default?', options: ['443', '22', '80', '8080'], correct: 2, explanation: 'HTTP uses port 80 by default. HTTPS uses port 443.' },
+                    { q: 'What port does SSH use?', options: ['21', '22', '23', '25'], correct: 1, explanation: 'SSH (Secure Shell) uses port 22.' },
+                    { q: 'What does PCAP stand for?', options: ['Packet Capture', 'Protocol Capture', 'Port Capture', 'Payload Capture'], correct: 0, explanation: 'PCAP stands for Packet Capture - files containing recorded network traffic.' },
+                    { q: 'Which tool is used to analyze PCAP files?', options: ['Nmap', 'Metasploit', 'Wireshark', 'Burp Suite'], correct: 2, explanation: 'Wireshark is the most popular tool for analyzing network packet captures.' },
+                    { q: 'What is the default port for MySQL?', options: ['1433', '5432', '3306', '27017'], correct: 2, explanation: 'MySQL uses port 3306 by default.' },
+                    { q: 'What does DNS stand for?', options: ['Data Network Service', 'Domain Name System', 'Dynamic Network Security', 'Digital Name Server'], correct: 1, explanation: 'DNS - Domain Name System - resolves domain names to IP addresses.' },
+                    { q: 'Which protocol is used to send emails between servers?', options: ['IMAP', 'POP3', 'SMTP', 'FTP'], correct: 2, explanation: 'SMTP (Simple Mail Transfer Protocol) is used to send emails between servers on port 25.' },
+                    { q: 'What tool is used to scan for open ports on a network?', options: ['Wireshark', 'Nmap', 'Burp Suite', 'Metasploit'], correct: 1, explanation: 'Nmap is the most popular tool for network scanning and port discovery.' },
+                    { q: 'What is a firewall?', options: ['A tool to capture traffic', 'A network security device that filters traffic', 'An encryption tool', 'A password manager'], correct: 1, explanation: 'A firewall monitors and filters incoming and outgoing network traffic based on rules.' },
+                    { q: 'Which port being exposed to the internet is the most dangerous?', options: ['Port 80 HTTP', 'Port 443 HTTPS', 'Port 3306 MySQL', 'Port 22 SSH'], correct: 2, explanation: 'Exposing MySQL port 3306 directly to the internet is extremely dangerous as it allows direct database access.' }
+                ]
+            }
+        ];
+
+        function renderQuizSelection() {
+            document.getElementById('quizGrid').innerHTML = quizzes.map((q, i) => `
+                <div class="quiz-card" onclick="startQuiz(${i})">
+                    <div class="quiz-icon">${q.icon}</div>
+                    <h3>${q.title}</h3>
+                    <p>${q.description}</p>
+                    <div class="quiz-meta">
+                        <span>${q.questions.length} questions</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function startQuiz(index) {
+            currentQuiz = quizzes[index];
+            currentQuestion = 0;
+            score = 0;
+            correct = 0;
+            wrong = 0;
+
+            document.getElementById('quizSelection').style.display = 'none';
+            document.getElementById('quizArea').classList.add('active');
+            document.getElementById('quizTitle').textContent = `${currentQuiz.icon} ${currentQuiz.title}`;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = currentQuiz.questions[currentQuestion];
+            const total = currentQuiz.questions.length;
+            const progress = ((currentQuestion) / total) * 100;
+
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('nextBtn').style.display = 'none';
+
+            document.getElementById('questionArea').innerHTML = `
+                <div class="question-card">
+                    <div class="question-number">Question ${currentQuestion + 1} of ${total}</div>
+                    <div class="question-text">${q.q}</div>
+                    <div class="options">
+                        ${q.options.map((opt, i) => `
+                            <button class="option" onclick="selectAnswer(${i})">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+            `;
+        }
+
+        function selectAnswer(index) {
+            const q = currentQuiz.questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            const feedback = document.getElementById('feedback');
+
+            options.forEach(opt => opt.classList.add('disabled'));
+
+            if (index === q.correct) {
+                options[index].classList.add('correct');
+                feedback.className = 'feedback correct';
+                feedback.textContent = `✅ Correct! ${q.explanation}`;
+                correct++;
+            } else {
+                options[index].classList.add('wrong');
+                options[q.correct].classList.add('correct');
+                feedback.className = 'feedback wrong';
+                feedback.textContent = `❌ Wrong! ${q.explanation}`;
+                wrong++;
+            }
+
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('nextBtn').textContent =
+                currentQuestion + 1 < currentQuiz.questions.length ? 'Next →' : 'See Results';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < currentQuiz.questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const total = currentQuiz.questions.length;
+            const percentage = Math.round((correct / total) * 100);
+            let emoji = percentage >= 80 ? '🏆' : percentage >= 60 ? '👍' : '📚';
+            let message = percentage >= 80 ? 'Excellent work!' : percentage >= 60 ? 'Good effort!' : 'Keep studying!';
+
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('nextBtn').style.display = 'none';
+
+            document.getElementById('questionArea').innerHTML = `
+                <div class="results-card">
+                    <div class="results-icon">${emoji}</div>
+                    <div class="results-score">${percentage}%</div>
+                    <div class="results-label">${message} You scored ${correct} out of ${total}</div>
+                    <div class="results-breakdown">
+                        <div class="breakdown-item">
+                            <strong class="correct-color">${correct}</strong>
+                            <span>Correct</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <strong class="wrong-color">${wrong}</strong>
+                            <span>Wrong</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <strong>${total}</strong>
+                            <span>Total</span>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="startQuiz(${quizzes.indexOf(currentQuiz)})">
+                        🔄 Retry Quiz
+                    </button>
+                    <button class="btn-outline" onclick="backToQuizzes()" style="margin-left:10px">
+                        ← All Quizzes
+                    </button>
+                </div>
+            `;
+        }
+
+        function backToQuizzes() {
+            document.getElementById('quizSelection').style.display = 'block';
+            document.getElementById('quizArea').classList.remove('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/pages/login.html';
+        }
+
+        renderQuizSelection();
+    </script>
+</body>
+</html>
