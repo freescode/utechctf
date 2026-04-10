@@ -11,7 +11,7 @@ Link:
 ## 📌 About
 UTech CTF Hub is a web-based cybersecurity learning platform designed for repeated classroom use. Students can work through hacking challenges, quizzes, and a Jeopardy board while instructors manage everything through an Admin Panel. 
 
-## 🚀 Features
+## Features
 - 18 CTF Challenges across Beginner, Intermediate, and Advanced tiers
 - 6 Categories: Web Hacking, Cryptography, Network Security, Reverse Engineering, Data Security, Social Engineering
 - Learn Section with 8 structured topic cards
@@ -21,7 +21,7 @@ UTech CTF Hub is a web-based cybersecurity learning platform designed for repeat
 - Admin Panel ; add, edit, enable/disable challenges, reset scoreboard
 - JWT Authentication with bcrypt password hashing
 
-## 🛠️ Tech Stack
+## Tech Stack
 Layer	Technology
 Backend	Node.js + Express.js
 Database	SQLite3
