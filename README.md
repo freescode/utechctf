@@ -3,7 +3,7 @@
 A reusable Capture The Flag (CTF) learning platform built for the University of Technology, Jamaica Ethical Hacking (CNS3005).
 
 ## 🔗 Live Demo
-https://utechctf-2.onrender.com
+https://utechctf-1.onrender.com/
 
 ## Documentation & Presentation 
 Link: 
