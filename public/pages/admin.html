@@ -34,7 +34,7 @@
         .nav-links a:hover { color: #fff; }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
         }
@@ -48,6 +48,7 @@
 
         .admin-header h2 { font-size: 24px; color: #ff4444; }
 
+        /* ── Buttons ── */
         .btn {
             padding: 10px 20px;
             background: #00ff41;
@@ -59,7 +60,6 @@
             border-radius: 4px;
             font-size: 13px;
         }
-
         .btn:hover { background: #00cc33; }
 
         .btn-danger {
@@ -72,7 +72,6 @@
             border-radius: 4px;
             font-size: 13px;
         }
-
         .btn-danger:hover { background: #3a0000; }
 
         .btn-warning {
@@ -85,7 +84,6 @@
             border-radius: 4px;
             font-size: 12px;
         }
-
         .btn-warning:hover { background: #3a2a00; }
 
         .btn-small {
@@ -99,9 +97,21 @@
             border-radius: 4px;
             font-size: 12px;
         }
-
         .btn-small:hover { background: #00cc33; }
 
+        .btn-blue {
+            background: transparent;
+            border: 1px solid #00aaff;
+            color: #00aaff;
+            padding: 6px 12px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .btn-blue:hover { background: #001a2a; }
+
+        /* ── Stats ── */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -117,17 +127,10 @@
             text-align: center;
         }
 
-        .stat-card h3 {
-            font-size: 32px;
-            color: #00ff41;
-            margin-bottom: 5px;
-        }
+        .stat-card h3 { font-size: 32px; color: #00ff41; margin-bottom: 5px; }
+        .stat-card p  { font-size: 12px; color: #888; }
 
-        .stat-card p {
-            font-size: 12px;
-            color: #888;
-        }
-
+        /* ── Section ── */
         .section {
             background: #111;
             border: 1px solid #222;
@@ -147,10 +150,8 @@
 
         .section-header h3 { font-size: 16px; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        /* ── Table ── */
+        table { width: 100%; border-collapse: collapse; }
 
         th {
             padding: 12px 20px;
@@ -172,33 +173,43 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #1a1a1a; }
 
+        /* ── Badges ── */
         .badge {
             font-size: 10px;
             padding: 2px 8px;
             border-radius: 3px;
             font-weight: bold;
         }
+        .badge-beginner    { background: #1a3a1a; color: #00ff41; }
+        .badge-intermediate{ background: #3a2a00; color: #ffaa00; }
+        .badge-advanced    { background: #3a0000; color: #ff4444; }
+        .badge-enabled     { background: #1a3a1a; color: #00ff41; }
+        .badge-disabled    { background: #3a0000; color: #ff4444; }
 
-        .badge-beginner { background: #1a3a1a; color: #00ff41; }
-        .badge-intermediate { background: #3a2a00; color: #ffaa00; }
-        .badge-advanced { background: #3a0000; color: #ff4444; }
-        .badge-enabled { background: #1a3a1a; color: #00ff41; }
-        .badge-disabled { background: #3a0000; color: #ff4444; }
+        .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-        .actions { display: flex; gap: 8px; }
+        /* ── Danger Zone ── */
+        .danger-zone {
+            background: #1a0000;
+            border: 1px solid #ff4444;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .danger-zone h3  { color: #ff4444; margin-bottom: 10px; font-size: 16px; }
+        .danger-zone p   { color: #888; font-size: 13px; margin-bottom: 15px; }
 
-        /* Modal */
+        /* ── Modal ── */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.92);
             justify-content: center;
             align-items: center;
             z-index: 100;
         }
-
         .modal.active { display: flex; }
 
         .modal-content {
@@ -206,9 +217,9 @@
             border: 1px solid #00ff41;
             border-radius: 8px;
             padding: 30px;
-            width: 600px;
-            max-width: 90%;
-            max-height: 85vh;
+            width: 650px;
+            max-width: 95%;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
@@ -220,20 +231,12 @@
             padding-bottom: 15px;
             border-bottom: 1px solid #222;
         }
-
         .modal-header h2 { font-size: 18px; }
-
-        .close {
-            cursor: pointer;
-            font-size: 20px;
-            color: #888;
-        }
-
+        .close { cursor: pointer; font-size: 20px; color: #888; }
         .close:hover { color: #fff; }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+        /* ── Form ── */
+        .form-group { margin-bottom: 15px; }
 
         .form-group label {
             display: block;
@@ -256,22 +259,56 @@
             font-size: 13px;
         }
 
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
+        .form-group textarea { height: 100px; resize: vertical; }
 
         .form-group input:focus,
         .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #00ff41;
-        }
+        .form-group textarea:focus { outline: none; border-color: #00ff41; }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
+        }
+
+        /* ── File upload area ── */
+        .file-upload-area {
+            border: 2px dashed #333;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            background: #0f0f0f;
+        }
+        .file-upload-area:hover { border-color: #00ff41; }
+        .file-upload-area.dragover { border-color: #00ff41; background: #0a1f0a; }
+        .file-upload-area p { color: #888; font-size: 13px; margin-bottom: 8px; }
+        .file-upload-area small { color: #555; font-size: 11px; }
+
+        /* ── Uploaded files list ── */
+        .files-list { margin-top: 12px; }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .file-item-name { color: #00aaff; flex: 1; }
+        .file-item-actions { display: flex; gap: 6px; }
+
+        .upload-progress {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #888;
+            min-height: 18px;
         }
 
         .result-msg {
@@ -281,30 +318,25 @@
         }
 
         .success { color: #00ff41; }
-        .error { color: #ff4444; }
+        .error   { color: #ff4444; }
 
-        .danger-zone {
-            background: #1a0000;
-            border: 1px solid #ff4444;
+        /* ── Files modal (view challenge files) ── */
+        .files-modal-content {
+            background: #111;
+            border: 1px solid #00aaff;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 30px;
+            width: 500px;
+            max-width: 95%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
-        .danger-zone h3 {
-            color: #ff4444;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .danger-zone p {
-            color: #888;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
+        .no-files { color: #555; font-size: 13px; text-align: center; padding: 20px 0; }
     </style>
 </head>
 <body>
+
 <nav>
     <h1>⚡ UTech CTF Hub</h1>
     <div class="nav-links">
@@ -313,288 +345,475 @@
         <a href="/pages/jeopardy.html">Jeopardy</a>
         <a href="/pages/quizzes.html">Quizzes</a>
         <a href="/pages/scoreboard.html">Scoreboard</a>
-        <a href="#" id="adminLink" style="display:none; color:#ff4444;">Admin</a>
+        <a href="/pages/admin.html" style="color:#ff4444;">Admin</a>
         <a href="#" onclick="logout()">Logout</a>
     </div>
-    <div class="nav-user" id="navUser"></div>
 </nav>
 
-    <div class="container">
-        <div class="admin-header">
-            <h2>⚠ Admin Dashboard</h2>
-            <button class="btn" onclick="openAddModal()">+ Add Challenge</button>
-        </div>
+<div class="container">
 
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3 id="statTotal">0</h3>
-                <p>Total Challenges</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="statUsers">0</h3>
-                <p>Registered Users</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="statSolves">0</h3>
-                <p>Total Solves</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="statEnabled">0</h3>
-                <p>Active Challenges</p>
-            </div>
-        </div>
-
-        <!-- Danger Zone -->
-        <div class="danger-zone">
-            <h3>⚠ Danger Zone</h3>
-            <p>Reset the scoreboard at the start of a new semester. This will clear all solves and reset all user points to zero.</p>
-            <button class="btn-danger" onclick="resetScoreboard()">🔄 Reset Scoreboard (New Semester)</button>
-        </div>
-
-        <!-- Challenges Table -->
-        <div class="section">
-            <div class="section-header">
-                <h3>📋 All Challenges</h3>
-                <span id="challengeCount" style="color:#888;font-size:13px;"></span>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Difficulty</th>
-                        <th>Points</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="challengeTable"></tbody>
-            </table>
-        </div>
+    <div class="admin-header">
+        <h2>⚠ Admin Dashboard</h2>
+        <button class="btn" onclick="openAddModal()">+ Add Challenge</button>
     </div>
 
-    <!-- Add/Edit Modal -->
-    <div class="modal" id="challengeModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Add Challenge</h2>
-                <span class="close" onclick="closeModal()">✕</span>
-            </div>
-            <input type="hidden" id="editId" />
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" id="fTitle" placeholder="Challenge title" />
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="fCategory">
-                        <option>Web Hacking</option>
-                        <option>Cryptography</option>
-                        <option>Network Security</option>
-                        <option>Reverse Engineering</option>
-                        <option>Data Security</option>
-                        <option>Social Engineering</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Difficulty</label>
-                    <select id="fDifficulty">
-                        <option>Beginner</option>
-                        <option>Intermediate</option>
-                        <option>Advanced</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Points</label>
-                    <input type="number" id="fPoints" placeholder="100" />
-                </div>
-                <div class="form-group">
-                    <label>Flag (e.g. CTF{flag_here})</label>
-                    <input type="text" id="fFlag" placeholder="CTF{...}" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="fDescription" placeholder="Challenge description..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Hint (optional)</label>
-                <input type="text" id="fHint" placeholder="Hint for students..." />
-            </div>
-            <button class="btn" onclick="saveChallenge()" style="width:100%">SAVE CHALLENGE</button>
-            <div class="result-msg" id="modalMsg"></div>
-        </div>
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card"><h3 id="statTotal">0</h3><p>Total Challenges</p></div>
+        <div class="stat-card"><h3 id="statUsers">0</h3><p>Registered Users</p></div>
+        <div class="stat-card"><h3 id="statSolves">0</h3><p>Total Solves</p></div>
+        <div class="stat-card"><h3 id="statEnabled">0</h3><p>Active Challenges</p></div>
     </div>
 
-    <script>
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.role === 'admin') {
-    document.getElementById('adminLink').style.display = 'inline';
-    document.getElementById('adminLink').href = '/pages/admin.html';
-}
-        if (!user || user.role !== 'admin') {
-            alert('Access denied. Admins only.');
-            window.location.href = '/pages/login.html';
-        }
+    <!-- Danger Zone -->
+    <div class="danger-zone">
+        <h3>⚠ Danger Zone</h3>
+        <p>Reset the scoreboard at the start of a new semester. This will clear all solves and reset all user points to zero. This action cannot be undone.</p>
+        <button class="btn-danger" onclick="resetScoreboard()">🔄 Reset Scoreboard (New Semester)</button>
+    </div>
 
-        const token = localStorage.getItem('token');
-
-        async function loadStats() {
-            const res = await fetch('/api/admin/stats', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await res.json();
-            document.getElementById('statTotal').textContent = data.totalChallenges || 0;
-            document.getElementById('statUsers').textContent = data.totalUsers || 0;
-            document.getElementById('statSolves').textContent = data.totalSolves || 0;
-            document.getElementById('statEnabled').textContent = data.enabledChallenges || 0;
-        }
-
-        async function loadChallenges() {
-            const res = await fetch('/api/admin/challenges', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const challenges = await res.json();
-            document.getElementById('challengeCount').textContent = `${challenges.length} challenges`;
-
-            document.getElementById('challengeTable').innerHTML = challenges.map(c => `
+    <!-- Challenges Table -->
+    <div class="section">
+        <div class="section-header">
+            <h3>📋 All Challenges</h3>
+            <span id="challengeCount" style="color:#888;font-size:13px;"></span>
+        </div>
+        <table>
+            <thead>
                 <tr>
-                    <td>${c.title}</td>
-                    <td>${c.category}</td>
-                    <td><span class="badge badge-${c.difficulty.toLowerCase()}">${c.difficulty}</span></td>
-                    <td>${c.points}</td>
-                    <td><span class="badge ${c.is_enabled ? 'badge-enabled' : 'badge-disabled'}">
-                        ${c.is_enabled ? 'Enabled' : 'Disabled'}
-                    </span></td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn-small" onclick="editChallenge(${c.id})">Edit</button>
-                            <button class="btn-warning" onclick="toggleChallenge(${c.id}, ${c.is_enabled})">
-                                ${c.is_enabled ? 'Disable' : 'Enable'}
-                            </button>
-                            <button class="btn-danger" onclick="deleteChallenge(${c.id})">Delete</button>
-                        </div>
-                    </td>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Difficulty</th>
+                    <th>Points</th>
+                    <th>Files</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
-            `).join('');
+            </thead>
+            <tbody id="challengeTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- ══ Add / Edit Challenge Modal ══════════════════════════════════════════ -->
+<div class="modal" id="challengeModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Add Challenge</h2>
+            <span class="close" onclick="closeModal()">✕</span>
+        </div>
+
+        <input type="hidden" id="editId" />
+
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="fTitle" placeholder="Challenge title" />
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Category</label>
+                <select id="fCategory">
+                    <option>Web Hacking</option>
+                    <option>Cryptography</option>
+                    <option>Network Security</option>
+                    <option>Reverse Engineering</option>
+                    <option>Data Security</option>
+                    <option>Social Engineering</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Difficulty</label>
+                <select id="fDifficulty">
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Advanced</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Points</label>
+                <input type="number" id="fPoints" placeholder="100" />
+            </div>
+            <div class="form-group">
+                <label>Flag (leave blank when editing to keep existing)</label>
+                <input type="text" id="fFlag" placeholder="CTF{...}" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="fDescription" placeholder="Challenge description / scenario..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Hint (optional)</label>
+            <input type="text" id="fHint" placeholder="Hint for students..." />
+        </div>
+
+        <!-- ── File Upload Section ── -->
+        <div class="form-group" id="fileUploadSection" style="display:none;">
+            <label>Challenge Files (zip, pdf, txt, pcap, png, jpg — max 10 MB each)</label>
+
+            <div class="file-upload-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                <p>📁 Click to choose a file or drag & drop here</p>
+                <small>Allowed: .zip .pdf .txt .pcap .png .jpg</small>
+            </div>
+            <input type="file" id="fileInput" style="display:none"
+                   accept=".zip,.pdf,.txt,.pcap,.png,.jpg"
+                   onchange="uploadFile(this.files[0])" />
+
+            <div class="upload-progress" id="uploadProgress"></div>
+            <div class="files-list" id="existingFiles"></div>
+        </div>
+
+        <button class="btn" onclick="saveChallenge()" style="width:100%;margin-top:5px;">SAVE CHALLENGE</button>
+        <div class="result-msg" id="modalMsg"></div>
+    </div>
+</div>
+
+<!-- ══ Files Viewer Modal (from table row) ═════════════════════════════════ -->
+<div class="modal" id="filesModal">
+    <div class="files-modal-content">
+        <div class="modal-header">
+            <h2 id="filesModalTitle">Challenge Files</h2>
+            <span class="close" onclick="document.getElementById('filesModal').classList.remove('active')">✕</span>
+        </div>
+        <div id="filesModalBody"></div>
+    </div>
+</div>
+
+<script>
+    // ── Auth guard ────────────────────────────────────────────────────────────
+    const user  = JSON.parse(localStorage.getItem('user') || 'null');
+    const token = localStorage.getItem('token');
+
+    if (!user || user.role !== 'admin') {
+        alert('Access denied. Admins only.');
+        window.location.href = '/pages/login.html';
+    }
+
+    // ── API helper ────────────────────────────────────────────────────────────
+    async function api(method, url, body = null) {
+        const opts = {
+            method,
+            headers: { 'Authorization': `Bearer ${token}` }
+        };
+        if (body && !(body instanceof FormData)) {
+            opts.headers['Content-Type'] = 'application/json';
+            opts.body = JSON.stringify(body);
+        } else if (body instanceof FormData) {
+            opts.body = body;
         }
+        const res = await fetch(url, opts);
+        return { res, data: await res.json() };
+    }
 
-        function openAddModal() {
-            document.getElementById('modalTitle').textContent = 'Add Challenge';
-            document.getElementById('editId').value = '';
-            document.getElementById('fTitle').value = '';
-            document.getElementById('fCategory').value = 'Web Hacking';
-            document.getElementById('fDifficulty').value = 'Beginner';
-            document.getElementById('fPoints').value = '';
-            document.getElementById('fFlag').value = '';
-            document.getElementById('fDescription').value = '';
-            document.getElementById('fHint').value = '';
-            document.getElementById('modalMsg').textContent = '';
-            document.getElementById('challengeModal').classList.add('active');
+    // ── Load stats ────────────────────────────────────────────────────────────
+    async function loadStats() {
+        const { data } = await api('GET', '/api/admin/stats');
+        document.getElementById('statTotal').textContent   = data.totalChallenges  || 0;
+        document.getElementById('statUsers').textContent   = data.totalUsers        || 0;
+        document.getElementById('statSolves').textContent  = data.totalSolves       || 0;
+        document.getElementById('statEnabled').textContent = data.enabledChallenges || 0;
+    }
+
+    // ── Load challenge table ──────────────────────────────────────────────────
+    async function loadChallenges() {
+        const { data: challenges } = await api('GET', '/api/admin/challenges');
+        document.getElementById('challengeCount').textContent = `${challenges.length} challenges`;
+
+        document.getElementById('challengeTable').innerHTML = challenges.map(c => {
+            const fileCount = (c.files || []).length;
+            return `
+            <tr>
+                <td>${c.title}</td>
+                <td>${c.category}</td>
+                <td><span class="badge badge-${c.difficulty.toLowerCase()}">${c.difficulty}</span></td>
+                <td>${c.points}</td>
+                <td>
+                    ${fileCount > 0
+                        ? `<button class="btn-blue" onclick="viewFiles(${c.id}, '${escHtml(c.title)}')">
+                               📎 ${fileCount} file${fileCount > 1 ? 's' : ''}
+                           </button>`
+                        : `<span style="color:#444;font-size:12px;">None</span>`}
+                </td>
+                <td><span class="badge ${c.is_enabled ? 'badge-enabled' : 'badge-disabled'}">
+                    ${c.is_enabled ? 'Enabled' : 'Disabled'}
+                </span></td>
+                <td>
+                    <div class="actions">
+                        <button class="btn-small"   onclick="editChallenge(${c.id})">Edit</button>
+                        <button class="btn-warning" onclick="toggleChallenge(${c.id})">
+                            ${c.is_enabled ? 'Disable' : 'Enable'}
+                        </button>
+                        <button class="btn-danger"  onclick="deleteChallenge(${c.id})">Delete</button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    // ── Open Add modal ────────────────────────────────────────────────────────
+    function openAddModal() {
+        document.getElementById('modalTitle').textContent = 'Add Challenge';
+        document.getElementById('editId').value       = '';
+        document.getElementById('fTitle').value       = '';
+        document.getElementById('fCategory').value    = 'Web Hacking';
+        document.getElementById('fDifficulty').value  = 'Beginner';
+        document.getElementById('fPoints').value      = '';
+        document.getElementById('fFlag').value        = '';
+        document.getElementById('fDescription').value = '';
+        document.getElementById('fHint').value        = '';
+        document.getElementById('modalMsg').textContent = '';
+        document.getElementById('fileUploadSection').style.display = 'none';
+        document.getElementById('existingFiles').innerHTML = '';
+        document.getElementById('challengeModal').classList.add('active');
+    }
+
+    // ── Open Edit modal ───────────────────────────────────────────────────────
+    async function editChallenge(id) {
+        const { data: c } = await api('GET', `/api/admin/challenges/${id}`);
+        document.getElementById('modalTitle').textContent = 'Edit Challenge';
+        document.getElementById('editId').value       = c.id;
+        document.getElementById('fTitle').value       = c.title;
+        document.getElementById('fCategory').value    = c.category;
+        document.getElementById('fDifficulty').value  = c.difficulty;
+        document.getElementById('fPoints').value      = c.points;
+        document.getElementById('fFlag').value        = '';
+        document.getElementById('fDescription').value = c.description || '';
+        document.getElementById('fHint').value        = c.hint || '';
+        document.getElementById('modalMsg').textContent = '';
+
+        // Show file section for existing challenges
+        document.getElementById('fileUploadSection').style.display = 'block';
+        renderExistingFiles(c.id, c.files || []);
+        document.getElementById('challengeModal').classList.add('active');
+    }
+
+    // ── Render existing files inside modal ────────────────────────────────────
+    function renderExistingFiles(challengeId, files) {
+        const container = document.getElementById('existingFiles');
+        if (!files.length) {
+            container.innerHTML = '<p style="color:#555;font-size:12px;margin-top:8px;">No files uploaded yet.</p>';
+            return;
         }
+        container.innerHTML = files.map(f => `
+            <div class="file-item" id="file_${btoa(f)}">
+                <span class="file-item-name">📄 ${escHtml(f)}</span>
+                <div class="file-item-actions">
+                    <a href="/api/admin/challenges/${challengeId}/download/${encodeURIComponent(f)}"
+                       download="${escHtml(f)}"
+                       class="btn-blue" style="padding:4px 10px;font-size:11px;text-decoration:none;">
+                       ⬇ Download
+                    </a>
+                    <button class="btn-danger" style="padding:4px 10px;font-size:11px;"
+                            onclick="deleteFile(${challengeId}, '${escHtml(f)}')">
+                        🗑 Delete
+                    </button>
+                </div>
+            </div>`).join('');
+    }
 
-        async function editChallenge(id) {
-            const res = await fetch(`/api/admin/challenges/${id}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const c = await res.json();
-            document.getElementById('modalTitle').textContent = 'Edit Challenge';
-            document.getElementById('editId').value = c.id;
-            document.getElementById('fTitle').value = c.title;
-            document.getElementById('fCategory').value = c.category;
-            document.getElementById('fDifficulty').value = c.difficulty;
-            document.getElementById('fPoints').value = c.points;
-            document.getElementById('fFlag').value = '';
-            document.getElementById('fDescription').value = c.description;
-            document.getElementById('fHint').value = c.hint || '';
-            document.getElementById('modalMsg').textContent = '';
-            document.getElementById('challengeModal').classList.add('active');
-        }
+    // ── Save challenge (add or edit) ──────────────────────────────────────────
+    async function saveChallenge() {
+        const id  = document.getElementById('editId').value;
+        const msg = document.getElementById('modalMsg');
 
-        async function saveChallenge() {
-            const id = document.getElementById('editId').value;
-            const msg = document.getElementById('modalMsg');
-            const body = {
-                title: document.getElementById('fTitle').value,
-                category: document.getElementById('fCategory').value,
-                difficulty: document.getElementById('fDifficulty').value,
-                points: parseInt(document.getElementById('fPoints').value),
-                flag: document.getElementById('fFlag').value,
-                description: document.getElementById('fDescription').value,
-                hint: document.getElementById('fHint').value
-            };
+        const body = {
+            title:       document.getElementById('fTitle').value.trim(),
+            category:    document.getElementById('fCategory').value,
+            difficulty:  document.getElementById('fDifficulty').value,
+            points:      parseInt(document.getElementById('fPoints').value) || 0,
+            flag:        document.getElementById('fFlag').value.trim(),
+            description: document.getElementById('fDescription').value.trim(),
+            hint:        document.getElementById('fHint').value.trim()
+        };
 
-            const url = id ? `/api/admin/challenges/${id}` : '/api/admin/challenges';
-            const method = id ? 'PUT' : 'POST';
+        if (!body.title) { showMsg(msg, 'error', 'Title is required.'); return; }
+        if (!id && !body.flag) { showMsg(msg, 'error', 'Flag is required for new challenges.'); return; }
 
-            const res = await fetch(url, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(body)
-            });
+        const url    = id ? `/api/admin/challenges/${id}` : '/api/admin/challenges';
+        const method = id ? 'PUT' : 'POST';
 
-            const data = await res.json();
-            if (res.ok) {
-                msg.className = 'result-msg success';
-                msg.textContent = data.message;
-                loadChallenges();
-                loadStats();
-                setTimeout(closeModal, 1500);
-            } else {
-                msg.className = 'result-msg error';
-                msg.textContent = data.error;
+        const { res, data } = await api(method, url, body);
+
+        if (res.ok) {
+            showMsg(msg, 'success', data.message);
+
+            // If this was an Add, show file upload section so files can be attached immediately
+            if (!id && data.id) {
+                document.getElementById('editId').value = data.id;
+                document.getElementById('modalTitle').textContent = 'Edit Challenge';
+                document.getElementById('fileUploadSection').style.display = 'block';
+                renderExistingFiles(data.id, []);
             }
-        }
 
-        async function toggleChallenge(id, currentStatus) {
-            await fetch(`/api/admin/challenges/${id}/toggle`, {
-                method: 'PUT',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
             loadChallenges();
             loadStats();
+        } else {
+            showMsg(msg, 'error', data.error || 'Something went wrong.');
+        }
+    }
+
+    // ── Upload a file ─────────────────────────────────────────────────────────
+    async function uploadFile(file) {
+        const id       = document.getElementById('editId').value;
+        const progress = document.getElementById('uploadProgress');
+
+        if (!id) {
+            progress.className = 'upload-progress error';
+            progress.textContent = 'Save the challenge first before uploading files.';
+            return;
         }
 
-        async function deleteChallenge(id) {
-            if (!confirm('Delete this challenge? This cannot be undone.')) return;
-            await fetch(`/api/admin/challenges/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            loadChallenges();
-            loadStats();
-        }
+        if (!file) return;
 
-        async function resetScoreboard() {
-            if (!confirm('Reset ALL scores? This will clear all solves and points for all users.')) return;
-            const res = await fetch('/api/admin/reset', {
+        progress.className   = 'upload-progress';
+        progress.textContent = `Uploading ${file.name}...`;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res  = await fetch(`/api/admin/challenges/${id}/upload`, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
             });
             const data = await res.json();
-            alert(data.message);
-            loadStats();
+
+            if (res.ok) {
+                progress.className   = 'upload-progress success';
+                progress.textContent = `✔ ${file.name} uploaded successfully!`;
+                // Refresh file list
+                const { data: c } = await api('GET', `/api/admin/challenges/${id}`);
+                renderExistingFiles(id, c.files || []);
+                loadChallenges();
+            } else {
+                progress.className   = 'upload-progress error';
+                progress.textContent = `✘ ${data.error}`;
+            }
+        } catch (err) {
+            progress.className   = 'upload-progress error';
+            progress.textContent = `✘ Upload failed: ${err.message}`;
         }
 
-        function closeModal() {
-            document.getElementById('challengeModal').classList.remove('active');
+        // Reset file input so same file can be re-uploaded if needed
+        document.getElementById('fileInput').value = '';
+    }
+
+    // ── Delete a file ─────────────────────────────────────────────────────────
+    async function deleteFile(challengeId, filename) {
+        if (!confirm(`Delete file "${filename}"?`)) return;
+
+        const { res, data } = await api('DELETE', `/api/admin/challenges/${challengeId}/files/${encodeURIComponent(filename)}`);
+
+        if (res.ok) {
+            const { data: c } = await api('GET', `/api/admin/challenges/${challengeId}`);
+            renderExistingFiles(challengeId, c.files || []);
+            loadChallenges();
+        } else {
+            alert(data.error || 'Failed to delete file.');
+        }
+    }
+
+    // ── View files from table row ─────────────────────────────────────────────
+    async function viewFiles(id, title) {
+        const { data: c } = await api('GET', `/api/admin/challenges/${id}`);
+        document.getElementById('filesModalTitle').textContent = `Files — ${title}`;
+
+        const files = c.files || [];
+        if (!files.length) {
+            document.getElementById('filesModalBody').innerHTML = '<p class="no-files">No files attached to this challenge.</p>';
+        } else {
+            document.getElementById('filesModalBody').innerHTML = files.map(f => `
+                <div class="file-item">
+                    <span class="file-item-name">📄 ${escHtml(f)}</span>
+                    <div class="file-item-actions">
+                        <a href="/api/admin/challenges/${id}/download/${encodeURIComponent(f)}"
+                           download="${escHtml(f)}"
+                           class="btn-blue" style="padding:4px 10px;font-size:11px;text-decoration:none;">
+                           ⬇ Download
+                        </a>
+                    </div>
+                </div>`).join('');
         }
 
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '/pages/login.html';
-        }
+        document.getElementById('filesModal').classList.add('active');
+    }
 
-        loadStats();
+    // ── Toggle enable/disable ─────────────────────────────────────────────────
+    async function toggleChallenge(id) {
+        await api('PUT', `/api/admin/challenges/${id}/toggle`);
         loadChallenges();
-    </script>
+        loadStats();
+    }
+
+    // ── Delete challenge ──────────────────────────────────────────────────────
+    async function deleteChallenge(id) {
+        if (!confirm('Delete this challenge and all its files? This cannot be undone.')) return;
+        await api('DELETE', `/api/admin/challenges/${id}`);
+        loadChallenges();
+        loadStats();
+    }
+
+    // ── Reset scoreboard ──────────────────────────────────────────────────────
+    async function resetScoreboard() {
+        if (!confirm('Reset ALL scores? This will clear all solves and points for every user.')) return;
+        const { data } = await api('POST', '/api/admin/reset');
+        alert(data.message);
+        loadStats();
+    }
+
+    // ── Close main modal ──────────────────────────────────────────────────────
+    function closeModal() {
+        document.getElementById('challengeModal').classList.remove('active');
+    }
+
+    // ── Drag & drop support ───────────────────────────────────────────────────
+    const dropZone = document.getElementById('dropZone');
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file) uploadFile(file);
+    });
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function showMsg(el, type, text) {
+        el.className = `result-msg ${type}`;
+        el.textContent = text;
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/pages/login.html';
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    loadStats();
+    loadChallenges();
+</script>
 </body>
 </html>
