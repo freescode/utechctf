@@ -22,12 +22,15 @@ UTech CTF Hub is a web-based cybersecurity learning platform designed for repeat
 - JWT Authentication with bcrypt password hashing
 
 ## Tech Stack
-Layer	Technology
-Backend	Node.js + Express.js
-Database	SQLite3
-Frontend	HTML / CSS / Vanilla JS
-Auth	JWT + bcryptjs
-Hosting	Render
+
+| Layer      | Technology                  |
+|------------|-----------------------------|
+| Backend    | Node.js + Express.js        |
+| Database   | SQLite3                     |
+| Frontend   | HTML / CSS / Vanilla JS     |
+| Auth       | JWT + bcryptjs              |
+| Hosting    | Render                      |
+
 
 ## ⚙️ Running Locally on Vs Code 
 
