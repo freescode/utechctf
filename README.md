@@ -58,9 +58,9 @@ To access the Admin Panel, log in with the admin account and navigate to `/pages
 | Name            | ID#     | Contribution                                                                 | Email                                   |
 |-----------------|---------|------------------------------------------------------------------------------|-----------------------------------------|
 | Merrick Foster  | 2306913 | System Architecture, Platform Features, Technologies Used <br> Backend, Login system, Database, Flag validation, Scoring system | merrickafoster@students.utech.edu.jm |
-| Person 1        | XXXXXXX | [Their contribution]                                               | [Their email goes here]                 |
-| Person 2        | XXXXXXX | [Their contribution]                                               | [Their email goes here]                 |
-| Person 3        | XXXXXXX | [Their contribution]                                               | [Their email goes here]                 |
+| Person 1        | XXXXXXX | [Their contribution]                                               | [email]                 |
+| Person 2        | XXXXXXX | [Their contribution]                                               | [email]                 |
+| Person 3        | XXXXXXX | [Their contribution]                                               | [email]                 |
 
 
 			
