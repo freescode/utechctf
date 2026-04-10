@@ -83,7 +83,7 @@ app.get('/challenges', (req, res) => {
 app.use((req, res) => {
     res.status(404).json({ error: 'Route not found' });
 });
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
