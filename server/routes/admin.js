@@ -211,4 +211,64 @@ router.post('/reset', isAdmin, (req, res) => {
     });
 });
 
+// ════════════════════════════════════════════════════════════════════════════
+// ══  USER MANAGEMENT ROUTES  ════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── Get all users with solve counts and last active ───────────────────────────
+router.get('/users', isAdmin, (req, res) => {
+    db.all(`
+        SELECT
+            u.id,
+            u.username,
+            u.email,
+            u.total_points,
+            u.role,
+            u.created_at,
+            COUNT(s.id)      AS solve_count,
+            MAX(s.solved_at) AS last_solve
+        FROM users u
+        LEFT JOIN solves s ON s.user_id = u.id
+        WHERE u.role != 'admin'
+        GROUP BY u.id
+        ORDER BY u.total_points DESC
+    `, [], (err, rows) => {
+        if (err) {
+            console.error('Error fetching users:', err);
+            return res.status(500).json({ error: 'Server error', details: err.message });
+        }
+        console.log(`Admin fetched users: ${rows.length} found`);
+        res.json(rows);
+    });
+});
+
+// ── Get single user profile with full solve history ───────────────────────────
+router.get('/users/:id', isAdmin, (req, res) => {
+    db.get(
+        `SELECT id, username, total_points, created_at FROM users WHERE id = ?`,
+        [req.params.id],
+        (err, user) => {
+            if (err)   return res.status(500).json({ error: 'Server error' });
+            if (!user) return res.status(404).json({ error: 'User not found' });
+
+            // Fetch all solves for this user, joined with challenge details
+            db.all(`
+                SELECT
+                    c.title,
+                    c.category,
+                    c.difficulty,
+                    c.points,
+                    s.solved_at
+                FROM solves s
+                JOIN challenges c ON c.id = s.challenge_id
+                WHERE s.user_id = ?
+                ORDER BY s.solved_at ASC
+            `, [req.params.id], (err2, solves) => {
+                if (err2) return res.status(500).json({ error: 'Server error' });
+                res.json({ ...user, solves: solves || [] });
+            });
+        }
+    );
+});
+
 module.exports = router;
