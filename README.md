@@ -55,13 +55,12 @@ To access the Admin Panel, log in with the admin account and navigate to `/pages
 
 ##  Group Members
 
-| Name            | ID#     | Contribution                                                                 | Email                                   |
-|-----------------|---------|------------------------------------------------------------------------------|-----------------------------------------|
-| Merrick Foster  | 2306913 | System Architecture, Platform Features, Technologies Used <br> Backend, Login system, Database, Flag validation, Scoring system | merrickafoster@students.utech.edu.jm |
-| Person 1        | XXXXXXX | [Their contribution]                                               | [email]                 |
-| Person 2        | XXXXXXX | [Their contribution]                                               | [email]                 |
-| Person 3        | XXXXXXX | [Their contribution]                                               | [email]                 |
-
+| Group Member | ID        | Website Contributions | Report Contributions |
+|--------------|-----------|-----------------------|----------------------|
+| Merrick Foster | 2306913 | - Backend <br> - Login system <br> - Database <br> - Flag validation <br> - Scoring system <br> - Admin Panel | System Architecture, Platform Features, Technologies Used |
+| Xavier Campbell | 2101552 | - Challenge pages <br> - File uploads <br> - Flag submission logic | |
+| Miessa Wright | 2300715 | - Admin Panel <br> - Add/edit/delete challenges <br> - Enable/disable <br> - Reset scoreboard | |
+| Jasmin Nelson | 2303868 | - Learn Section and Quizzes <br> - Learning notes <br> - Quiz system <br> - Question | |
 
 			
 			
